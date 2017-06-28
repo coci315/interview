@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>01</title>
+</head>
+
+<body>
+  <ul>
+    <li>0</li>
+    <li>1</li>
+    <li>2</li>
+    <li>3</li>
+    <li>4</li>
+  </ul>
+  <script>
+    var nodes = document.querySelectorAll('ul li')
+    // 问题
+    // for (var i = 0, len = nodes.length; i < len; i++) {
+    //   nodes[i].addEventListener('click', function () {
+    //     alert('click ' + i)
+    //   })
+    // }
+    // 常规解法
+    // for (var i = 0, len = nodes.length; i < len; i++) {
+    //   (function (node, index) {
+    //     node.addEventListener('click', function () {
+    //       alert('click ' + index)
+    //     })
+    //   })(nodes[i], i)
+    // }
+    // 解法二
+    // 注：NodeList.prototype.forEach并非所有的浏览器都支持
+    // Array.prototype.slice.call(nodes).forEach(function (node, index) {
+    //   node.addEventListener('click', function () {
+    //     alert('click ' + index)
+    //   })
+    // })
+    // 解法三
+    // 块级作用域变量声明let
+    // for (let i = 0, len = nodes.length; i < len; i++) {
+    //   nodes[i].addEventListener('click', function () {
+    //     alert('click ' + i)
+    //   })
+    // }
+    // 引申问题：当列表项达到100或更多呢？ => 事件代理进行优化
+    var ul = document.querySelector('ul')
+    Array.prototype.slice.call(nodes).forEach(function (node, index) {
+      node.index = index
+    })
+    ul.addEventListener('click', function (e) {
+      alert(e.target.index)
+    })
+  </script>
+</body>
+
+</html>

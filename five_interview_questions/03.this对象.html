@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>03</title>
+</head>
+
+<body>
+  <script>
+    var aa = {
+      a: 'haha',
+      getA: function () {
+        console.log(this.a)
+      }
+    }
+    var b = {
+      a: 'hello'
+    }
+    var getA = aa.getA
+    var getA2 = getA.bind(aa)
+
+    function run(fn) {
+      fn()
+    }
+    // 分别输出
+    aa.getA() // 'haha'
+    getA() //undefined  // 如果时严格模式则会报错Uncaught TypeError: Cannot read property 'a' of undefined，因为此时this指向undefined
+    run(aa.getA) //undefined
+    getA2.call(b) //'haha'
+  </script>
+</body>
+
+</html>

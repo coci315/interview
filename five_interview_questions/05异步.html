@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>异步</title>
+</head>
+
+<body>
+  <script>
+    // 问题
+    // 现在有三个异步接口，分别是
+    // 1.getTodayUser：获取当天用户id，callback返回userId
+    // 2.getTodayMovie： 获取当天的电影id，callback返回movieId
+    // 3.bookMovieFor： 为用户预定电影，参数是userId和movieId
+    // 现在要实现一个接口bookTodayMovieForTodayUser，为当天用户预定当天电影
+    getTodayUser(function (userId) {
+      // 获得当天的预定客户
+    })
+    getTodayMovie(function (movieId) {
+      // 获得当天的电影
+    })
+    // 为用户预定影片
+    bookMovieForUser(userId, movieId, function (isDone) {
+
+    })
+
+    // 根据以上接口封装这个函数
+    bookTodayMovieForTodayUser(function (isDone) {
+      // 为今天预定客户预定当天影片
+      alert('预定成功')
+    })
+  </script>
+  <script>
+    // 标准解法，使用callback方式
+    function bookTodayMovieForTodayUser(callback) {
+      var params = [] // 标记完成的请求
+
+      function checkAndBook() {
+        var uid = params[0]
+        var mid = params[1]
+        if (typeof uid !== 'undefined' && mid !== 'undefined') {
+          bookMovieForUser(uid, mid, callback)
+        }
+      }
+
+      getTodayUser(function (userId) {
+        params[0] = userId
+        checkAndBook() // 检查
+      })
+      getTodayMovie(function (movieId) {
+        params[1] = movieId
+        checkAndBook() // 检查
+      })
+    }
+  </script>
+  <script>
+    // 更通用的做法
+    function convertToPromise(fn) {
+      return function () {
+        //slice arguments 不是高效做法，这里只为了简化起见
+        var args = Array.prototype.slice.call(arguments)
+        var self = this
+
+        return new Promise(function (resolve) {
+          function callback(ret) {
+            resolve(ret)
+          }
+          args.push(callback)
+          fn.apply(self, args)
+        })
+      }
+    }
+    // 将所有请求转化成Promise的模式，利用Promise本身的特性来解决异步逻辑问题
+    var getTodayUser2 = convertToPromise(getTodayUser)
+    var getTodayMovie2 = convertToPromise(getTodayMovie)
+    var bookMovieForUser2 = convertToPromise(bookMovieForUser)
+    Promise.all([getTodayUser2(), getTodayMovie2()])
+      .then(function (param) {
+        return bookMovieForUser2(param[0], param[1])
+      }).then(function () {
+        alert('done')
+      })
+  </script>
+</body>
+
+</html>

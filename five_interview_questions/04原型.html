@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>04</title>
+</head>
+
+<body>
+  <script>
+    function clone(obj) {
+      // 实现
+      return Object.create(obj)
+    }
+
+    // function clone(obj) {
+    //   // 另一种实现
+    //   var ret = {}
+    //   // 警告：__proto__并不是规范，避免使用
+    //   ret.__proto__ = obj
+    //   return ret
+    // }
+    // function clone(obj) {
+    //   // 低版本浏览器实现方式
+    //   function Noop() {}
+    //   Noop.prototype = obj
+    //   return new Noop
+    // }
+    var a = {
+      name: 'a'
+    }
+    var b = clone(a)
+
+    console.log(b.name) // 'a'
+
+    a.name = 'a1'
+    console.log(b.name) // 'a1'
+
+    b.name = 'b'
+    console.log(a.name) // 'a1'
+
+    a.name = 'a2'
+    console.log(b.name) // 'b'
+  </script>
+</body>
+
+</html>
